@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Forge Flow：面向本质化攻关项目的轻量固定审批流演示系统。">
+    <meta name="theme-color" content="#f4f6f8">
+    <title>Forge Flow · 本质化攻关审批流</title>
+    <link rel="stylesheet" href="/styles-v2.css?v=0.2.1">
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳到主要内容</a>
+
+<div class="app-shell" id="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="主导航">
+        <div class="brand-block">
+            <div class="brand-mark" aria-hidden="true">
+                <span></span><span></span><span></span>
+            </div>
+            <div>
+                <p class="brand-en">FORGE FLOW</p>
+                <p class="brand-cn">本质化攻关</p>
+            </div>
+        </div>
+
+        <nav class="main-nav" aria-label="工作区">
+            <button class="nav-item is-active" type="button" data-view="overview" aria-current="page">
+                <span class="nav-index">01</span>
+                <span>流程总览</span>
+            </button>
+            <button class="nav-item" type="button" data-view="tasks">
+                <span class="nav-index">02</span>
+                <span>我的任务</span>
+                <span class="nav-badge" id="nav-task-count" aria-label="0 条待办">0</span>
+            </button>
+            <button class="nav-item" type="button" data-view="projects">
+                <span class="nav-index">03</span>
+                <span>项目台账</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-foot">
+            <span class="system-state"><i aria-hidden="true"></i> 服务运行正常</span>
+            <span>流程定义 v1</span>
+        </div>
+    </aside>
+
+    <div class="content-shell">
+        <header class="topbar">
+            <button class="icon-button menu-button" id="menu-button" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-context">
+                <span class="context-label">迁钢公司</span>
+                <span class="context-divider" aria-hidden="true">/</span>
+                <strong>安全改造工作台</strong>
+                <span class="context-date" id="current-date"></span>
+            </div>
+            <div class="topbar-actions">
+                <button class="icon-button refresh-button" id="refresh-button" type="button" aria-label="刷新数据" title="刷新数据">
+                    <span class="refresh-icon" aria-hidden="true">↻</span>
+                </button>
+                <section class="identity-panel" aria-labelledby="identity-title">
+                    <div class="identity-copy">
+                        <span id="identity-title">演示身份</span>
+                        <label class="sr-only" for="demo-user-select">切换演示身份</label>
+                        <select id="demo-user-select" aria-describedby="identity-help"></select>
+                        <span class="sr-only" id="identity-help">切换角色可体验填报、或签、逐级审批与指派确认。</span>
+                    </div>
+                    <div class="active-user-card" id="active-user-card" aria-live="polite"></div>
+                </section>
+                <button class="primary-button" id="new-project-button" type="button">
+                    <span aria-hidden="true">＋</span> 发起攻关
+                </button>
+            </div>
+        </header>
+
+        <main id="main-content" tabindex="-1">
+            <section class="view is-active" id="overview-view" aria-labelledby="overview-title">
+                <div class="hero-row reveal-item">
+                    <div>
+                        <p class="eyebrow">审批中心</p>
+                        <h1 id="overview-title">工作台</h1>
+                        <p class="hero-description">集中查看待办、项目状态与最近流转，快速推进本质化攻关项目。</p>
+                    </div>
+                    <span class="hero-status"><i aria-hidden="true"></i> 固定流程运行中</span>
+                </div>
+
+                <div class="metric-grid reveal-item" id="metric-grid" aria-label="流程统计"></div>
+
+                <div class="overview-grid reveal-item">
+                    <section class="panel tasks-panel" aria-labelledby="urgent-title">
+                        <div class="section-heading compact">
+                            <div>
+                                <h2 id="urgent-title">当前待办</h2>
+                                <p>优先处理与你当前身份相关的审批任务</p>
+                            </div>
+                            <button class="text-button" type="button" data-go-view="tasks">全部任务 <span aria-hidden="true">→</span></button>
+                        </div>
+                        <div id="urgent-task-list" class="compact-list"></div>
+                    </section>
+
+                    <div class="overview-side">
+                        <section class="workflow-board panel" aria-labelledby="workflow-title">
+                            <div class="section-heading compact">
+                                <div>
+                                    <h2 id="workflow-title">审批路线</h2>
+                                    <p>逐级上报 · 支持定点退回</p>
+                                </div>
+                                <span class="board-caption">固定流程</span>
+                            </div>
+                            <div class="process-line" aria-label="草稿、作业区审批、作业部审批、公司审批、待攻关">
+                                <div class="process-node is-done"><span>1</span><strong>项目填报</strong><small>草稿 / 提交</small></div>
+                                <i aria-hidden="true"></i>
+                                <div class="process-node is-current"><span>2</span><strong>作业区审批</strong><small>或签 / 退回</small></div>
+                                <i aria-hidden="true"></i>
+                                <div class="process-node"><span>3</span><strong>作业部审批</strong><small>通过 / 升级</small></div>
+                                <i aria-hidden="true"></i>
+                                <div class="process-node"><span>4</span><strong>公司审批</strong><small>最终决策</small></div>
+                                <i aria-hidden="true"></i>
+                                <div class="process-node is-end"><span>5</span><strong>待攻关</strong><small>审批闭环</small></div>
+                            </div>
+                        </section>
+
+                        <section class="panel activity-panel" aria-labelledby="activity-title">
+                            <div class="section-heading compact">
+                                <div>
+                                    <h2 id="activity-title">最近流转</h2>
+                                    <p>审批操作按时间追加留痕</p>
+                                </div>
+                                <span class="append-only">审计记录</span>
+                            </div>
+                            <ol id="activity-list" class="activity-list"></ol>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+            <section class="view" id="tasks-view" aria-labelledby="tasks-title" hidden>
+                <div class="page-heading reveal-item">
+                    <div>
+                        <p class="eyebrow"><span>HUMAN TASK</span> / 人工任务</p>
+                        <h1 id="tasks-title">我的任务</h1>
+                        <p>办理权限以任务为准；或签节点由首位办理人完成流转。</p>
+                    </div>
+                    <div class="task-tabs" role="tablist" aria-label="任务范围">
+                        <button type="button" role="tab" aria-selected="true" class="is-active" data-task-view="todo">待处理</button>
+                        <button type="button" role="tab" aria-selected="false" data-task-view="done">已处理</button>
+                    </div>
+                </div>
+                <div class="task-grid reveal-item" id="task-grid"></div>
+            </section>
+
+            <section class="view" id="projects-view" aria-labelledby="projects-title" hidden>
+                <div class="page-heading reveal-item">
+                    <div>
+                        <p class="eyebrow"><span>LEDGER</span> / 攻关台账</p>
+                        <h1 id="projects-title">项目台账</h1>
+                        <p>运行态用于当前查询，审批记录用于追溯历史。</p>
+                    </div>
+                    <label class="search-field" for="project-search">
+                        <span aria-hidden="true">⌕</span>
+                        <input id="project-search" type="search" placeholder="搜索编号或课题" autocomplete="off">
+                    </label>
+                </div>
+                <div class="ledger-panel reveal-item">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th scope="col">项目 / 编号</th>
+                                <th scope="col">流程状态</th>
+                                <th scope="col">当前节点</th>
+                                <th scope="col">当前处理人</th>
+                                <th scope="col">进度</th>
+                                <th scope="col"><span class="sr-only">操作</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="project-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="project-card-list" id="project-card-list"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<dialog class="modal" id="create-project-dialog" aria-labelledby="create-dialog-title">
+    <form id="create-project-form" novalidate>
+        <div class="dialog-head">
+            <div>
+                <p class="section-kicker">NEW INITIATIVE</p>
+                <h2 id="create-dialog-title">发起本质化攻关</h2>
+            </div>
+            <button class="icon-button dialog-close" type="button" aria-label="关闭发起项目窗口">×</button>
+        </div>
+        <div class="dialog-body form-grid">
+            <div class="field field-wide">
+                <label for="project-title">攻关课题名称 <span aria-hidden="true">*</span></label>
+                <input id="project-title" name="title" type="text" maxlength="160" autocomplete="off" required placeholder="例如：高炉煤气区域机械隔离优化">
+                <p class="field-error" id="project-title-error"></p>
+            </div>
+            <div class="field">
+                <label for="project-category">攻关分类 <span aria-hidden="true">*</span></label>
+                <select id="project-category" name="category" required>
+                    <option value="">请选择分类</option>
+                    <option>设备设施</option>
+                    <option>作业环境</option>
+                    <option>作业管理</option>
+                    <option>交通安全</option>
+                    <option>能源介质</option>
+                </select>
+                <p class="field-error" id="project-category-error"></p>
+            </div>
+            <div class="field">
+                <label for="project-flow-type">流程方式 <span aria-hidden="true">*</span></label>
+                <select id="project-flow-type" name="flowType" required>
+                    <option value="REPORT">逐级上报</option>
+                    <option value="ASSIGNMENT">跨部门指派</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="project-deadline">计划完成时限</label>
+                <input id="project-deadline" name="completeDeadline" type="date">
+            </div>
+            <div class="field field-wide">
+                <label for="project-background">问题背景 <span aria-hidden="true">*</span></label>
+                <textarea id="project-background" name="background" rows="5" maxlength="1600" required placeholder="描述现状、主要风险以及期望解决的问题……"></textarea>
+                <div class="field-meta"><p class="field-error" id="project-background-error"></p><span id="background-count">0 / 1600</span></div>
+            </div>
+            <aside class="form-note field-wide">
+                <strong>演示提示</strong>
+                <p>创建后先保存为草稿，再从项目台账提交。选择“逐级上报”会进入作业区或签；选择“跨部门指派”会进入指派确认。</p>
+            </aside>
+        </div>
+        <div class="dialog-actions">
+            <button class="secondary-button dialog-cancel" type="button">取消</button>
+            <button class="primary-button" type="submit">保存草稿</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal action-modal" id="task-action-dialog" aria-labelledby="action-dialog-title">
+    <form id="task-action-form" novalidate>
+        <div class="dialog-head">
+            <div>
+                <p class="section-kicker" id="action-dialog-kicker">TASK DECISION</p>
+                <h2 id="action-dialog-title">处理审批任务</h2>
+            </div>
+            <button class="icon-button dialog-close" type="button" aria-label="关闭任务处理窗口">×</button>
+        </div>
+        <div class="dialog-body">
+            <div class="decision-context" id="decision-context"></div>
+            <div class="field" id="return-target-field" hidden>
+                <label for="return-target">退回节点 <span aria-hidden="true">*</span></label>
+                <select id="return-target" name="targetNode"></select>
+            </div>
+            <div class="field">
+                <label for="task-comment">处理意见 <span id="comment-required" aria-hidden="true"></span></label>
+                <textarea id="task-comment" name="comment" rows="4" maxlength="800" placeholder="填写本次处理说明……"></textarea>
+                <p class="field-error" id="task-comment-error"></p>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="secondary-button dialog-cancel" type="button">取消</button>
+            <button class="primary-button" id="confirm-action-button" type="submit">确认处理</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal detail-modal" id="project-detail-dialog" aria-labelledby="detail-dialog-title">
+    <div class="dialog-head">
+        <div>
+            <p class="section-kicker">PROCESS INSTANCE</p>
+            <h2 id="detail-dialog-title">项目详情</h2>
+        </div>
+        <button class="icon-button dialog-close" type="button" aria-label="关闭项目详情">×</button>
+    </div>
+    <div class="dialog-body" id="project-detail-content"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<script src="/app.js?v=0.3.0" defer></script>
+</body>
+</html>

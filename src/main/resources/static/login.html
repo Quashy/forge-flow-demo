@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Forge Flow 公开演示环境访问验证。">
+    <meta name="theme-color" content="#17252c">
+    <title>访问验证 · Forge Flow</title>
+    <link rel="stylesheet" href="/login.css?v=0.3.0">
+</head>
+<body>
+<main class="login-shell">
+    <section class="login-story" aria-labelledby="product-title">
+        <div class="brand-block">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div>
+                <strong>FORGE FLOW</strong>
+                <span>本质化攻关审批流</span>
+            </div>
+        </div>
+        <div class="story-copy">
+            <p class="kicker">PUBLIC DEMO · 公开演示</p>
+            <h1 id="product-title">让每一次审批<br>都有清晰去向。</h1>
+            <p>这是一个用于秋招展示的固定审批流 Demo。验证访问码后，可体验项目填报、或签、逐级审批、退回直达与完整审计。</p>
+        </div>
+        <p class="story-foot"><i aria-hidden="true"></i> 演示环境 · 数据可能定期恢复</p>
+    </section>
+
+    <section class="login-panel" aria-labelledby="login-title">
+        <div class="login-card">
+            <p class="kicker">DEMO ACCESS</p>
+            <h2 id="login-title">进入演示系统</h2>
+            <p class="login-description">请输入简历或项目说明中提供的访问码。</p>
+            <div class="message" id="login-message" role="alert" hidden></div>
+
+            <form action="/login" method="post" id="login-form">
+                <input type="hidden" name="username" value="visitor">
+                <input type="hidden" name="_csrf" id="csrf-token">
+                <div class="field">
+                    <label for="access-code">演示访问码</label>
+                    <input id="access-code" name="password" type="password" required
+                           autocomplete="current-password" autofocus
+                           aria-describedby="access-code-help" placeholder="输入访问码">
+                    <p id="access-code-help">访问凭证仅用于保护公开演示数据。</p>
+                </div>
+                <button type="submit" id="login-button">验证并进入</button>
+            </form>
+
+            <div class="security-note">
+                <span aria-hidden="true">✓</span>
+                <p><strong>独立演示认证</strong>登录后仍可切换不同流程角色，二者互不混淆。</p>
+            </div>
+        </div>
+        <p class="panel-foot">Forge Flow · Definition v1</p>
+    </section>
+</main>
+<script src="/login.js?v=0.3.0" defer></script>
+</body>
+</html>

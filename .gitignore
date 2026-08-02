@@ -1,0 +1,9 @@
+/target/
+/data/
+.env
+/.idea/
+*.iml
+*.log
+.DS_Store
+/docs/*-qa.png
+/src/main/resources/static/styles.css

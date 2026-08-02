@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: forge_flow
+      POSTGRES_USER: forge
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?请在 .env 中设置 DB_PASSWORD}
+    volumes:
+      - forge-flow-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forge -d forge_flow"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  app:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: forge_flow
+      DB_USER: forge
+      DB_PASSWORD: ${DB_PASSWORD:?请在 .env 中设置 DB_PASSWORD}
+      DEMO_ACCESS_CODE: ${DEMO_ACCESS_CODE:?请在 .env 中设置 DEMO_ACCESS_CODE}
+      DEMO_RESET_ENABLED: ${DEMO_RESET_ENABLED:-true}
+      DEMO_RESET_CRON: "${DEMO_RESET_CRON:-0 0 4 * * *}"
+      DEMO_RESET_ZONE: ${DEMO_RESET_ZONE:-Asia/Shanghai}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-true}
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api/meta >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  forge-flow-db:
