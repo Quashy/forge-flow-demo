@@ -2,6 +2,10 @@
 
 一个面向演示的轻量固定审批流系统。非 BPMN 平台，非工作流引擎，是从真实企业安全攻关场景中提炼出的领域状态机，重点展示人工任务、或签、逐级审批、退回直达、任务权限和追加式审计。
 
+在线体验：[Forge Flow 审批流 Demo](http://1.14.186.80:8081)
+
+设计背景、关键取舍与技术边界见：[从流程图到状态机：我怎样落地一个审批需求](https://quashy.github.io/2026/lightweight-approval-workflow)。
+
 ![流程总览](docs/overview.png)
 
 ![演示访问验证](docs/login.png)
