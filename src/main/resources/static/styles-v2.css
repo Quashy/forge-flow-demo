@@ -380,6 +380,18 @@ a:focus-visible,
     line-height: 1;
 }
 
+.github-button {
+    flex: none;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+}
+
+.github-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 .menu-button {
     display: none;
 }
@@ -1660,6 +1672,10 @@ tbody tr:hover {
         transform: scale(0.96);
     }
 
+    .github-button:active {
+        transform: scale(0.96);
+    }
+
     @keyframes reveal {
         from {
             opacity: 0;
@@ -1924,7 +1940,7 @@ tbody tr:hover {
         max-width: 104px;
     }
 
-    #new-project-button span {
+    .primary-button-label {
         display: none;
     }
 
